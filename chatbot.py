@@ -1,10 +1,9 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_community.tools import DuckDuckGoSearchRun
-
+from langchain_google_community import GoogleSearchAPIWrapper
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
-def setup_agent(api_key):
+def setup_agent(api_key,GOOGLE_SEARCH_API_KEY,GOOGLE_CSE_ID):
     tools = []
     try:
 # 1. Initialize the LLM
@@ -13,9 +12,11 @@ def setup_agent(api_key):
             temperature=0,
             google_api_key=api_key
         )
-
+        tools.append(llm)
     # setup search tool
-        search = DuckDuckGoSearchRun()
+        search = GoogleSearchAPIWrapper(
+            google_api_key=GOOGLE_SEARCH_API_KEY,
+            google_cse_id=GOOGLE_CSE_ID)
         tools.append(search)
     except Exception as e:
         raise RuntimeError(f"Error setting up tools or LLM: {e}")

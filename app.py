@@ -7,9 +7,16 @@ st.title("Alex AI Chatbot")
 
 # --- 1. API Key Handling ---
 # Try to get from secrets, otherwise ask user
-if "GOOGLE_SEARCH_API_KEY" in st.secrets and "GOOGLE_CSE_ID" in st.secrets:
+if "GOOGLE_SEARCH_API_KEY" in st.secrets:
     GOOGLE_SEARCH_API_KEY = st.secrets["GOOGLE_SEARCH_API_KEY"]
+if not GOOGLE_SEARCH_API_KEY:
+    st.warning("Please provide a Google Search API Key to proceed.")
+    st.stop()
+if "GOOGLE_CSE_ID" in st.secrets: 
     GOOGLE_CSE_ID = st.secrets["GOOGLE_CSE_ID"]
+if not GOOGLE_CSE_ID:
+    st.warning("Please provide a Google CSE ID to proceed.")
+    st.stop()
 if "GOOGLE_API_KEY" in st.secrets:
     api_key = st.secrets["GOOGLE_API_KEY"]
 

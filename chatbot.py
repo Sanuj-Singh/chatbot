@@ -5,18 +5,20 @@ from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
 
 def setup_agent(api_key):
-
+    tools = []
+    try:
 # 1. Initialize the LLM
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-2.5-flash", 
-        temperature=0,
-        google_api_key=api_key
-    )
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.5-flash", 
+            temperature=0,
+            google_api_key=api_key
+        )
 
-# setup search tool
-    search = DuckDuckGoSearchRun()
-    tools = [search]
- 
+    # setup search tool
+        search = DuckDuckGoSearchRun()
+        tools.append(search)
+    except Exception as e:
+        raise RuntimeError(f"Error setting up tools or LLM: {e}")
    
 # saves the conversation history
     memory = MemorySaver()

@@ -53,12 +53,26 @@ if prompt := st.chat_input("Ask me anything..."):
                 response = st.session_state.agent.invoke(
                     {"messages": [("user", prompt)]}, 
                     config=config
-                                )
-                if response["messages"] and hasattr(response["messages"][-1], 'content'):
-                    ai_response = response["messages"][-1].content
+                                                )
+                if response["messages"]:
+                    last_message = response["messages"][-1]
+                    
+                    # Get the raw content
+                    if hasattr(last_message, 'content'):
+                        raw_content = last_message.content
+                        
+                        # FIX: Check if it's that specific list structure you are seeing
+                        if isinstance(raw_content, list) and len(raw_content) > 0:
+                            # Grab just the 'text' field, ignore 'extras' and 'signature'
+                            ai_response = raw_content[0].get('text', '')
+                        else:
+                            # If it's just a normal string, use it as is
+                            ai_response = str(raw_content)
+                    else:
+                        ai_response = "Sorry, no content attribute found."
                 else:
                     ai_response = "Sorry, no response generated."
-# Extract the AI's response content from the response               
+    # Extract the AI's response content from the response               
                 
 
                 st.markdown(ai_response)

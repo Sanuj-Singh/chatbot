@@ -27,7 +27,7 @@ if "thread_id" not in st.session_state:
     st.session_state.thread_id = "user_session_1" 
 
 if "agent" not in st.session_state:
-    st.session_state.agent = setup_agent(api_key)
+    st.session_state.agent = setup_agent(api_key,GOOGLE_SEARCH_API_KEY,GOOGLE_CSE_ID)
 #  ---  Intro Message from Alex ---
 if "alex_intro" not in st.session_state:
     intro_message = "Hey 👋 I’m **Alex**, an AI assistant. How can I help you today?"

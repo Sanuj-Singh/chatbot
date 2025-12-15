@@ -5,26 +5,6 @@ st.set_page_config(page_title="LangGraph Chatbot", page_icon="ud83eudd46")
 
 st.title("Alex AI Chatbot")
 
-# --- 1. API Key Handling ---
-# Try to get from secrets, otherwise ask user
-if "GOOGLE_SEARCH_API_KEY" in st.secrets:
-    GOOGLE_SEARCH_API_KEY = st.secrets["GOOGLE_SEARCH_API_KEY"]
-if not GOOGLE_SEARCH_API_KEY:
-    st.warning("Please provide a Google Search API Key to proceed.")
-    st.stop()
-if "GOOGLE_CSE_ID" in st.secrets: 
-    GOOGLE_CSE_ID = st.secrets["GOOGLE_CSE_ID"]
-if not GOOGLE_CSE_ID:
-    st.warning("Please provide a Google CSE ID to proceed.")
-    st.stop()
-if "GOOGLE_API_KEY" in st.secrets:
-    api_key = st.secrets["GOOGLE_API_KEY"]
-
-
-if not api_key:
-    st.warning("Please provide a Google API Key to proceed.")
-    st.stop()
-
 #  ---  Session State Initialization ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -34,7 +14,7 @@ if "thread_id" not in st.session_state:
     st.session_state.thread_id = "user_session_1" 
 
 if "agent" not in st.session_state:
-    st.session_state.agent = setup_agent(api_key,GOOGLE_SEARCH_API_KEY,GOOGLE_CSE_ID)
+    st.session_state.agent = setup_agent()
 #  ---  Intro Message from Alex ---
 if "alex_intro" not in st.session_state:
     intro_message = "Hey 👋 I’m **Alex**, an AI assistant. How can I help you today?"
@@ -69,16 +49,17 @@ if prompt := st.chat_input("Ask me anything..."):
                
                 config = {"configurable": {"thread_id": st.session_state.thread_id}}
 # Invoke the agent with the user prompt and thread ID for context
+                
                 response = st.session_state.agent.invoke(
                     {"messages": [("user", prompt)]}, 
                     config=config
-                )
-
+                                )
+                if response["messages"] and hasattr(response["messages"][-1], 'content'):
+                    ai_response = response["messages"][-1].content
+                else:
+                    ai_response = "Sorry, no response generated."
 # Extract the AI's response content from the response               
-                content = response["messages"][-1].content
-                ai_response = " ".join(
-                part["text"] for part in content if part["type"] == "text"
-                )
+                
 
                 st.markdown(ai_response)
                 

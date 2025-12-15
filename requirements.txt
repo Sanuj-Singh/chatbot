@@ -1,7 +1,7 @@
 streamlit
+langchain-google-generative-ai
 langchain
 langchain-community
 langchain-core
-langchain-memory
 langchain-google-genai
 duckduckgo-search
